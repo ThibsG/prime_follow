@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
-#include <unordered_map>
+#include <map>
 #include <tuple>
 
 #include "Primes.hpp"
@@ -19,14 +19,18 @@ class Repartition
   public:
     Repartition() = delete;
     Repartition(PrimeSP primes);
-    virtual ~Repartition() {};
 
     void compute();
+    void print_results();
 
   private:
-    const std::vector<uint8_t> m_ending = {1, 3, 7, 9};
+    std::map<uint8_t, CountTotal> m_results{
+      {1, CountTotal{0,0}},
+      {3, CountTotal{0,0}},
+      {7, CountTotal{0,0}},
+      {9, CountTotal{0,0}}
+    };
 
-    std::unordered_map<uint8_t, CountTotal> m_results;
     PrimeSP m_primes;
 };
 

@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+
 namespace Primes
 {
 
@@ -12,23 +13,33 @@ Repartition::Repartition(PrimeSP primeSP) :
 
 void Repartition::compute()
 {
-  auto lastDigit = 0;
-  for(auto prime : *m_primes)
+  unsigned short lastDigit = 0;
+  for(auto&& prime : *m_primes)
   {
     const auto digit = prime % 10;
 
-    if(lastDigit == 0) {
-      std::cout << "Init lastDigit: " << digit << std::endl;
-      lastDigit = digit;
-    }
-
-    for(auto end : m_ending)
+    if(prime > 10)
     {
-      if(digit == end)
-        continue;
-
-//       m_results[end] =
+      auto& counter = m_results[digit];
+      std::get<1>(counter) += 1;
+      std::get<0>(counter) += (lastDigit == digit) ? 1 : 0;
     }
+
+    lastDigit = digit;
+  }
+}
+
+void Repartition::print_results()
+{
+  uint16_t followed, total;
+
+  for(auto&& it: m_results) {
+    std::tie(followed, total) = it.second;
+    const auto perc = float(followed*100) / total;
+
+    std::cout << "\t\t" << unsigned(it.first) << ": ";
+    std::cout << followed << " / " << total;
+    std::cout << " so " << perc << "%" << std::endl;
   }
 }
 
