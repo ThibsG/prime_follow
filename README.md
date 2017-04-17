@@ -6,7 +6,7 @@ __Resource__ : https://www.quantamagazine.org/20160313-mathematicians-discover-p
 
 In classic primes distribution, it is admitted that for any positive integer, primes are equaly distributed.
 
-It means that in general, \frac{1}/{4} of primes ends in 1, 3, 7 or 9.
+It means that in general, $\frac14$ of primes ends in 1, 3, 7 or 9.
 
 But when we take a look at consecutive primes, they do not act like expected.
 
