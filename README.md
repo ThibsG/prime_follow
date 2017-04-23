@@ -2,8 +2,8 @@
 
 
 __Resources__ :
-* [https://www.quantamagazine.org/20160313-mathematicians-discover-prime-conspiracy/]
-* [https://terrytao.wordpress.com/2016/03/14/biases-between-consecutive-primes/]
+* https://www.quantamagazine.org/20160313-mathematicians-discover-prime-conspiracy/
+* https://terrytao.wordpress.com/2016/03/14/biases-between-consecutive-primes/
 
 
 In classic primes distribution, it is admitted that for any positive integer, primes are equaly distributed.
