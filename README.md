@@ -1,7 +1,9 @@
-# Prime follow distribution
+# Prime follow distribution or distribution of consecutive primes
 
 
-__Resource__ : https://www.quantamagazine.org/20160313-mathematicians-discover-prime-conspiracy/
+__Resources__ :
+* [https://www.quantamagazine.org/20160313-mathematicians-discover-prime-conspiracy/]
+* [https://terrytao.wordpress.com/2016/03/14/biases-between-consecutive-primes/]
 
 
 In classic primes distribution, it is admitted that for any positive integer, primes are equaly distributed.
@@ -25,5 +27,7 @@ Upper real limit is 25x10^6.
 # TODO
 
 Actually the code gives probability for a prime to be followed by itself.
-- Do it for all primes by all primes
 - Impossible to process large amount (100.000.000 elements). Do chunk processing
+- Multi-threading
+- Perform time analysis
+- Add tests

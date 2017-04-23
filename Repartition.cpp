@@ -6,40 +6,44 @@
 namespace Primes
 {
 
-Repartition::Repartition(PrimeSP primeSP) :
-  m_primes(primeSP)
+Repartition::Repartition(PrimeSP primeSP, uint8_t digit) :
+  m_primes(primeSP),
+  m_digit(digit)
 {
 }
 
-void Repartition::compute()
+void Repartition::compute() noexcept
 {
-  unsigned short lastDigit = 0;
-  for(auto&& prime : *m_primes)
+  uint8_t lastDigit = 0;
+
+  for(auto&& prime: *m_primes)
   {
     const auto digit = prime % 10;
 
-    if(prime > 10)
+    if(lastDigit == m_digit && prime > 10)
     {
-      auto& counter = m_results[digit];
-      std::get<1>(counter) += 1;
-      std::get<0>(counter) += (lastDigit == digit) ? 1 : 0;
+      for(auto&& it: m_results) {
+        std::get<1>(it.second) += 1;
+        std::get<0>(it.second) += (it.first == digit) ? 1 : 0;
+      }
     }
 
     lastDigit = digit;
   }
 }
 
-void Repartition::print_results()
+void displayResults(const Repartition& r)
 {
   uint16_t followed, total;
 
-  for(auto&& it: m_results) {
+  std::cout << "\tComputing global repartition for prime ending by " << unsigned(r.digit()) << std::endl;
+
+  for(auto&& it: r.results()) {
     std::tie(followed, total) = it.second;
     const auto perc = float(followed*100) / total;
 
-    std::cout << "\t\t" << unsigned(it.first) << ": ";
-    std::cout << followed << " / " << total;
-    std::cout << " so " << perc << "%" << std::endl;
+    std::cout << "\t\t(" << unsigned(r.digit()) << "," << unsigned(it.first) << "): ";
+    std::cout << perc << "% (" << followed << "/" << total << ")" << std::endl;
   }
 }
 

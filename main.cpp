@@ -16,19 +16,20 @@ int main(int argc, char** argv)
   cout << ":: Prime distribution rule tester" << endl;
 
   cout << "\tPrime calculation from 0 to " << PrimesUpTo << "..." << endl;
-  const auto prime = Primes::primes(PrimesUpTo);
-  cout << "\t" << prime->size() << " prime numbers detected" << endl;
+  const auto primes = Primes::primes(PrimesUpTo);
+  cout << "\t" << primes->size() << " prime numbers detected" << endl;
   cout << "\tFirst primes: ";
   for(int i = 0 ; i < ShowLimit ; ++i) {
-    cout << prime->at(i) << " ";
+    cout << primes->at(i) << " ";
   }
   cout << endl;
 
-  cout << "\tComputing global repartition..." << endl;
-  Primes::Repartition repartition(prime);
-  repartition.compute();
-  repartition.print_results();
+  for(auto&& p: std::vector<uint8_t>{1, 3, 7, 9}) {
+    Primes::Repartition repartition(primes, p);
+    repartition.compute();
 
+    Primes::displayResults(repartition);
+  }
   cout << ":: End of tests" << endl;
   return 0;
 };
