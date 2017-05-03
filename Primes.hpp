@@ -6,27 +6,45 @@
 #include <vector>
 #include <list>
 #include <numeric>
+#include <thread>
+
+#include <iostream>
 
 namespace Primes
 {
 
 using PrimeSP = std::shared_ptr<std::vector<uint64_t>>;
 
-inline PrimeSP primes(uint64_t primesUpTo)
+enum class ExecPolicy
 {
-  PrimeSP out(new std::vector<uint64_t>);
-  std::list<uint64_t> table(primesUpTo - 2);
-  std::iota(table.begin(), table.end(), 2);
+  Sequenced,
+  MultiTasked,
+  Threaded
+};
 
-  while(not table.empty())
-  {
-    auto prime = table.front();
-    out->push_back(prime);
-    table.remove_if([&](uint64_t n){ return n % prime == 0;});
-  }
+class Primes
+{
+  public:
+    explicit Primes(uint64_t upTo, ExecPolicy ep = ExecPolicy::MultiTasked);
 
-  return out;
-}
+    void generate();
+
+    ExecPolicy policy() const;
+    void setPolicy(ExecPolicy ep);
+
+    PrimeSP primes() const;
+
+  private:
+    uint64_t m_upTo;
+    ExecPolicy m_policy;
+    PrimeSP m_primes;
+
+    void tasked();
+    void threaded();
+    void sequenced();
+
+    uint8_t cpuCount() const;
+};
 
 }
 
