@@ -13,8 +13,21 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
 
 # Sources
 file(GLOB CHEADERS *.hpp)
-file(GLOB CSOURCES *.cpp)
+file(GLOB CSOURCES Primes.cpp Repartition.cpp)
 
 # Executable
-add_executable(prime_distribution ${CHEADERS} ${CSOURCES})
+add_executable(prime_distribution main.cpp ${CHEADERS} ${CSOURCES})
 target_link_libraries(prime_distribution)
+
+# Tests
+enable_testing()
+
+## Executable
+add_executable(prime_tester prime_tester.cpp ${CHEADERS} ${CSOURCES})
+
+## Add tests
+add_test(PrimeTest1 prime_tester -n 100)
+add_test(PrimeTest2 prime_tester -n 1000)
+add_test(PrimeTest3 prime_tester -n 10003)
+add_test(PrimeTest4 prime_tester -n 50001)
+add_test(PrimeTest5 prime_tester -n 73895)
