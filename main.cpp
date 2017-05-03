@@ -8,7 +8,7 @@
 
 using namespace std;
 
-static constexpr uint64_t PrimesUpTo = 25*pow(10,3); // 10,6
+static constexpr uint64_t PrimesUpTo = 100;//25*pow(10,3); // 10,6
 static constexpr uint8_t  ShowLimit = 25;
 
 int main(int argc, char** argv)
@@ -16,7 +16,9 @@ int main(int argc, char** argv)
   cout << ":: Prime distribution rule tester" << endl;
 
   cout << "\tPrime calculation from 0 to " << PrimesUpTo << "..." << endl;
-  const auto primes = Primes::primes(PrimesUpTo);
+  auto primeGenerator = Primes::Primes(PrimesUpTo, Primes::ExecPolicy::Threaded);
+  primeGenerator.generate();
+  const auto primes = primeGenerator.primes();
   cout << "\t" << primes->size() << " prime numbers detected" << endl;
   cout << "\tFirst primes: ";
   for(int i = 0 ; i < ShowLimit ; ++i) {

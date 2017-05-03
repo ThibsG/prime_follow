@@ -31,3 +31,4 @@ Actually the code gives probability for a prime to be followed by itself.
 - Multi-threading
 - Perform time analysis
 - Add tests
+- Allow to perform analysis on range based integers
