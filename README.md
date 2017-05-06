@@ -8,7 +8,7 @@ __Resources__ :
 
 In classic primes distribution, it is admitted that for any positive integer, primes are equaly distributed.
 
-It means that in general, $\frac14$ of primes ends in 1, 3, 7 or 9.
+It means that in general, 1/4 of primes ends in 1, 3, 7 or 9.
 
 But when we take a look at consecutive primes, they do not act like expected.
 
@@ -27,8 +27,5 @@ Upper real limit is 25x10^6.
 # TODO
 
 Actually the code gives probability for a prime to be followed by itself.
-- Impossible to process large amount (100.000.000 elements). Do chunk processing
-- Multi-threading
 - Perform time analysis
-- Add tests
 - Allow to perform analysis on range based integers
