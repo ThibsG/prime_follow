@@ -26,8 +26,8 @@ enable_testing()
 add_executable(prime_tester prime_tester.cpp ${CHEADERS} ${CSOURCES})
 
 ## Add tests
-add_test(PrimeTest1 prime_tester -n 100)
-add_test(PrimeTest2 prime_tester -n 1000)
-add_test(PrimeTest3 prime_tester -n 10003)
-add_test(PrimeTest4 prime_tester -n 50001)
-add_test(PrimeTest5 prime_tester -n 73895)
+add_test(PrimeTest_100   prime_tester -n 100)
+add_test(PrimeTest_1000  prime_tester -n 1000)
+add_test(PrimeTest_10003 prime_tester -n 10003)
+add_test(PrimeTest_50001 prime_tester -n 50001)
+add_test(PrimeTest_73895 prime_tester -n 73895)
