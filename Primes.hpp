@@ -18,8 +18,7 @@ using PrimeSP = std::shared_ptr<std::vector<uint64_t>>;
 enum class ExecPolicy
 {
   Sequenced,
-  MultiTasked,
-  Threaded
+  MultiTasked
 };
 
 class Primes
@@ -42,6 +41,8 @@ class Primes
     void tasked();
     void threaded();
     void sequenced();
+
+    std::list<std::vector<uint64_t>> setupData() const;
 
     uint8_t cpuCount() const;
 };

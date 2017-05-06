@@ -6,7 +6,7 @@
 namespace
 {
 
-std::vector<uint64_t> keepPrimes(std::vector<uint64_t> table)
+std::vector<uint64_t> keepPrimes(std::vector<uint64_t>& table)
 {
   std::vector<uint64_t> primes;
   while(not table.empty())
@@ -49,20 +49,10 @@ PrimeSP Primes::primes() const
 
 void Primes::generate()
 {
-  switch(m_policy)
-  {
-    case ExecPolicy::Sequenced:
-      sequenced();
-      break;
-
-    case ExecPolicy::Threaded:
-      threaded();
-      break;
-
-    case ExecPolicy::MultiTasked:
-    default:
-      tasked();
-  }
+  if(m_policy == ExecPolicy::Sequenced)
+    sequenced();
+  else
+    tasked();
 }
 
 void Primes::sequenced()
@@ -75,24 +65,17 @@ void Primes::sequenced()
 
 void Primes::tasked()
 {
-  const auto cpus = cpuCount();
-  const auto chunkSize = m_upTo / cpus;
+  auto data = setupData();
 
-  // Split data
   std::vector<std::future<std::vector<uint64_t>>> futures;
-  for(uint64_t i = 2 ; i <= m_upTo ; i += chunkSize)
-  {
-    std::vector<uint64_t> table(std::min(chunkSize, m_upTo-i));
-    std::iota(table.begin(), table.end(), i);
-
+  for(auto& chunk : data) {
     futures.push_back(
-      std::async(keepPrimes, table)
+      std::async(std::launch::async, keepPrimes, chunk)
     );
   }
 
   std::vector<uint64_t> asyncPrimes;
-  for(auto& result: futures)
-  {
+  for(auto& result: futures) {
     auto&& future = result.get();
     asyncPrimes.insert(asyncPrimes.end(), future.begin(), future.end());
   }
@@ -100,9 +83,26 @@ void Primes::tasked()
   m_primes = PrimeSP(new std::vector<uint64_t>(keepPrimes(asyncPrimes)));
 }
 
-void Primes::threaded()
+std::list<std::vector<uint64_t>> Primes::setupData() const
 {
-  throw std::runtime_error("Not implemented request");
+  auto start = std::chrono::high_resolution_clock::now();
+
+  std::list<std::vector<uint64_t>> data;
+  const auto cpus = cpuCount();
+  const auto chunkSize = m_upTo / cpus;
+
+  for(uint64_t i = 2 ; i <= m_upTo ; i += chunkSize)
+  {
+    std::vector<uint64_t> table(std::min(chunkSize, m_upTo-i));
+    std::iota(table.begin(), table.end(), i);
+    data.emplace_back(std::move(table));
+  }
+
+  auto end = std::chrono::high_resolution_clock::now();
+  std::cout << "Splitting data took "
+            << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            << "ms" << std::endl;
+  return data;
 }
 
 uint8_t Primes::cpuCount() const
