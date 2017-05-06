@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <future>
 #include <exception>
+#include <chrono>
+#include <ctime>
 
 #include "Primes.hpp"
 #include "Repartition.hpp"
@@ -18,8 +20,15 @@ void parseArguments(int argc, char** argv, uint64_t& n);
 
 Primes::PrimeSP getPrimes(uint64_t primesUpTo, Primes::ExecPolicy policy)
 {
+  auto start = std::chrono::high_resolution_clock::now();
   auto primeGenerator = Primes::Primes(primesUpTo, policy);
   primeGenerator.generate();
+  auto end = std::chrono::high_resolution_clock::now();
+
+  auto strPolicy = (policy == Primes::ExecPolicy::Sequenced) ? "Sequenced" : "MultiTasked";
+  std::cout << strPolicy << " took "
+            << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+            << "ms" << std::endl;
   return primeGenerator.primes();
 }
 
@@ -62,7 +71,6 @@ int main(int argc, char** argv)
     throw std::runtime_error("Primes should be equal");
   }
 
-  std::cout << "Okay !" << std::endl;
   return 0;
 };
 
