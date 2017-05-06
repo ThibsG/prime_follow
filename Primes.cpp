@@ -75,28 +75,19 @@ void Primes::sequenced()
 
 void Primes::tasked()
 {
-  auto cpus = cpuCount();
-  auto chunkSize = m_upTo / cpus;
+  const auto cpus = cpuCount();
+  const auto chunkSize = m_upTo / cpus;
 
   // Split data
   std::vector<std::future<std::vector<uint64_t>>> futures;
   for(uint64_t i = 2 ; i <= m_upTo ; i += chunkSize)
   {
-    auto limit = i + chunkSize;
-
-    std::cout << "from " << unsigned(i) << " to " << unsigned(limit) << std::endl;
-
-    std::vector<uint64_t> table(chunkSize);
+    std::vector<uint64_t> table(std::min(chunkSize, m_upTo-i));
     std::iota(table.begin(), table.end(), i);
-
-    for(unsigned int k = 0 ; k < table.size() ; ++k)
-      std::cout << " " << table.at(k);
-    std::cout << std::endl;
 
     futures.push_back(
       std::async(keepPrimes, table)
     );
-    std::cout << "Added new future..." << std::endl;
   }
 
   std::vector<uint64_t> asyncPrimes;
@@ -105,11 +96,6 @@ void Primes::tasked()
     auto&& future = result.get();
     asyncPrimes.insert(asyncPrimes.end(), future.begin(), future.end());
   }
-
-  // Remove potential overflow due to chunks
-  asyncPrimes.erase(
-    std::remove_if(asyncPrimes.begin(), asyncPrimes.end(), [&](uint64_t n){ return n > m_upTo;}),
-    asyncPrimes.end());
 
   m_primes = PrimeSP(new std::vector<uint64_t>(keepPrimes(asyncPrimes)));
 }
