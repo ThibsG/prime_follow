@@ -12,6 +12,16 @@ Repartition::Repartition(PrimeSP primeSP, uint8_t digit) :
 {
 }
 
+const Results& Repartition::results() const
+{
+  return m_results;
+}
+
+uint8_t Repartition::digit() const
+{
+  return m_digit;
+}
+
 void Repartition::compute() noexcept
 {
   uint8_t lastDigit = 0;

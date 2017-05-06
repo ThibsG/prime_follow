@@ -27,12 +27,8 @@ class Repartition
     Repartition(PrimeSP primes, uint8_t digit);
 
     void compute() noexcept;
-
-    const Results& results() const
-    { return m_results;}
-
-    uint8_t digit() const
-    { return m_digit;}
+    const Results& results() const;
+    uint8_t digit() const;
 
   private:
     Results m_results{
