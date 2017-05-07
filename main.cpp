@@ -35,7 +35,7 @@ int main(int argc, char** argv)
   }
   cout << endl;
 
-  for(auto&& p: std::vector<uint8_t>{1, 3, 7, 9}) {
+  for(auto&& p: vector<uint8_t>{1, 3, 7, 9}) {
     Primes::Repartition repartition(primes, p);
     repartition.compute();
 
