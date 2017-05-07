@@ -27,5 +27,4 @@ Upper real limit is 25x10^6.
 # TODO
 
 Actually the code gives probability for a prime to be followed by itself.
-- Perform time analysis
 - Allow to perform analysis on range based integers

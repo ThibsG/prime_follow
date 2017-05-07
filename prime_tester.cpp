@@ -9,29 +9,16 @@
 #include <exception>
 #include <chrono>
 #include <ctime>
+#include <vector>
 
-#include "Primes.hpp"
+#include "Tools.hpp"
 #include "Repartition.hpp"
 
 using namespace std;
 
+template<typename T>
+void check(T&& results);
 void parseArguments(int argc, char** argv, uint64_t& n);
-
-
-Primes::PrimeSP getPrimes(uint64_t primesUpTo, Primes::ExecPolicy policy)
-{
-  auto start = std::chrono::high_resolution_clock::now();
-  auto primeGenerator = Primes::Primes(primesUpTo, policy);
-  primeGenerator.generate();
-  auto end = std::chrono::high_resolution_clock::now();
-
-  auto strPolicy = (policy == Primes::ExecPolicy::Sequenced) ? "Sequenced" : "MultiTasked";
-  std::cout << strPolicy << " took "
-            << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-            << "ms" << std::endl;
-  return primeGenerator.primes();
-}
-
 
 int main(int argc, char** argv)
 {
@@ -39,38 +26,22 @@ int main(int argc, char** argv)
   parseArguments(argc, argv, primesUpTo);
 
   if(primesUpTo <= 0)
-    throw std::runtime_error("Please assert that -n option >0");
+    throw runtime_error("Please assert that -n option >0");
 
-  std::vector<std::future<Primes::PrimeSP>> futures;
+  vector<future<Primes::PrimeSP>> futures;
   futures.push_back(
-    std::async(getPrimes, primesUpTo, Primes::ExecPolicy::Sequenced)
+    async(getPrimes, primesUpTo, Primes::ExecPolicy::Sequenced)
   );
   futures.push_back(
-    std::async(getPrimes, primesUpTo, Primes::ExecPolicy::MultiTasked)
+    async(getPrimes, primesUpTo, Primes::ExecPolicy::MultiTasked)
   );
 
-  std::vector<Primes::PrimeSP> primes;
+  vector<Primes::PrimeSP> primes;
   for(auto& e : futures) {
     primes.push_back(e.get());
   }
 
-  auto first = primes.at(0);
-  auto second = primes.at(1);
-
-  if(*first != *second) {
-    std::cout << "First: " << first->size() << std::endl;
-    for(auto& e : *first)
-      std::cout << e << " ";
-    std::cout << std::endl;
-
-    std::cout << "Second: " << second->size() << std::endl;
-    for(auto& e : *second)
-      std::cout << e << " ";
-    std::cout << std::endl;
-
-    throw std::runtime_error("Primes should be equal");
-  }
-
+  check(primes);
   return 0;
 };
 
@@ -88,5 +59,24 @@ void parseArguments(int argc, char** argv, uint64_t& n)
       default:
         abort();
     }
+  }
+}
+
+template<typename T> void check(T&& results)
+{
+  auto show = [&](auto which, auto res) {
+    cout << which << res->size() << endl;
+    for(auto& e : *res)
+      cout << e << " ";
+    cout << endl;
+  };
+
+  auto first  = results.at(0);
+  auto second = results.at(1);
+
+  if(*first != *second) {
+    show("First: ",  first);
+    show("Second: ", second);
+    throw runtime_error("Primes should be equal");
   }
 }
