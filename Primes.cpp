@@ -6,7 +6,7 @@
 namespace
 {
 
-std::vector<uint64_t> keepPrimes(std::vector<uint64_t>& table)
+std::vector<uint64_t> keepPrimes(std::vector<uint64_t> table)
 {
   std::vector<uint64_t> primes;
   while(not table.empty())
