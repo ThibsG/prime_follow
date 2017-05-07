@@ -39,7 +39,6 @@ class Primes
     PrimeSP m_primes;
 
     void tasked();
-    void threaded();
     void sequenced();
 
     std::list<std::vector<uint64_t>> setupData() const;

@@ -30,7 +30,7 @@ void Repartition::compute() noexcept
   {
     const auto digit = prime % 10;
 
-    if(lastDigit == m_digit && prime > 10)
+    if(lastDigit == m_digit)
     {
       for(auto&& it: m_results) {
         std::get<1>(it.second) += 1;
